@@ -18,7 +18,7 @@ const task = args._[0];
  * @type {[type]}
  */
 global.LOG_PREFIX = chalk.white.underline(`Node DB Migrate:`) + ' ' + chalk.magenta(task);
-global.resolve = (name) => require(path.join(process.cwd(), name));
+global.resolve = (name) => require(path.join(__dirname, name));
 
 /**
  * Load RC
