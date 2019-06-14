@@ -1,0 +1,28 @@
+{
+  "name": "@liveaxle/node-pg-migrate",
+  "version": "0.0.1",
+  "description": "Nodejs PostGreSQL migration assistant.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "create": "node ./"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@bitbucket.org/liveaxle/node-db-migrate.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "homepage": "https://bitbucket.org/liveaxle/node-db-migrate#readme",
+  "dependencies": {
+    "chalk": "^2.4.2",
+    "cli": "^1.0.1",
+    "dotenv": "^8.0.0",
+    "joi": "^14.3.1",
+    "knex": "^0.17.5",
+    "log": "^6.0.0",
+    "minimist": "^1.2.0",
+    "pg": "^7.11.0",
+    "rc": "^1.2.8"
+  }
+}
