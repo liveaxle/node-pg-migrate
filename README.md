@@ -15,7 +15,7 @@ You'll notice all migrations generated are `async` functions. This does mean at 
 
 ## Usage 
 
-Add `"npgm": "./node_modules/.bin/@liveaxle/node-pg-migrate"` to the scripts section of your application's package.json so you don't have to type the whole binary path.
+Add `"npgm": "node ./node_modules/@liveaxle/node-pg-migrate"` to the scripts section of your application's package.json so you don't have to type the whole binary path.
 
 ## Configuration
 
