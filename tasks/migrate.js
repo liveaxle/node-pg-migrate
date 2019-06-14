@@ -83,7 +83,10 @@ module.exports = async function(args={}, client, task) {
       // Check if migration has been run
       let state = (await db.migrations.status(file, client));
       // If state is same as current task, migration has been performed, skip.
-      if(state === mappings[task]) continue;
+      if(state === mappings[task]) {
+        console.log(`${LOG_PREFIX} - '${mappings[task]}' migration for: [${file}] exists - skipping.`);
+        continue;
+      }
 
       let result = (await fn[mappings[task]](client));
       console.log(`${LOG_PREFIX} - '${mappings[task]}' migration for: [${file}] - successful`);
