@@ -4,8 +4,7 @@
   "description": "Nodejs PostGreSQL migration assistant.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "create": "node ./"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",

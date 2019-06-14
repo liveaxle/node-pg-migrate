@@ -5,9 +5,9 @@
  ***********************************************************************************************************************************************
  * @description
  */
-const dotenv = require('dotenv').config();
 const chalk = require('chalk');
 const path = require('path');
+const dotenv = require('dotenv').config({path: path.join(process.cwd(), '.env')});
 const args = require('minimist')(process.argv.slice(2));
 const log = require('log');
 const db = require('./db');
@@ -35,16 +35,6 @@ const CNFG = require('rc')('npgm', {
  */
 const tasks = require('./tasks');
 
-// Comands to support
-// migration:create <name> | --path --ordering
-// migration:up all | --include | --exlcude --connection
-// migration:down all | -- include | --exlude | --connection
-// migration:clear --connection
-//
-// Migration rc config
-// ordering : sequential, timestamp
-// directory : <path> ./migrations
-
 
 /**
  * [mappings description]
@@ -66,7 +56,6 @@ const mappings = {
 
   let client = db.client(args);
   
-
   try {
     console.log(`${LOG_PREFIX} - starting.`)
     await (mappings[task] || mappings.unknown)(Object.assign({}, CNFG, args), client, task);
