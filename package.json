@@ -16,6 +16,7 @@
   "dependencies": {
     "chalk": "^2.4.2",
     "cli": "^1.0.1",
+    "cli-table-redemption": "^1.0.1",
     "dotenv": "^8.0.0",
     "joi": "^14.3.1",
     "knex": "^0.17.5",

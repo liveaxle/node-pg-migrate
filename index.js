@@ -45,10 +45,12 @@ const mappings = {
   'migration:up': tasks.migrate,
   'migration:down': tasks.migrate,
   'migration:clear': tasks.clear,
+  'migration:list': tasks.list,
   'migrate:create': tasks.create,
   'migrate:up': tasks.migrate,
   'migrate:down': tasks.migrate,
   'migrate:clear': tasks.clear,
+  'migrate:list': tasks.list,
   unknown: () => {}
 };
 

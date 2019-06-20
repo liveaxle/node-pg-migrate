@@ -19,7 +19,8 @@ module.exports = {
     create: createMigrationTable,
     status: getMigrationStatus,
     save: saveMigration,
-    clear: clearMigrations
+    clear: clearMigrations,
+    list: listMigrations
   }
 };
 
@@ -104,4 +105,16 @@ async function saveMigration(file, state, client) {
  */
 async function clearMigrations(client) {
   return (await client.schema.withSchema('public').dropTable(MIGRATION_TABLE_NAME));
+}
+
+/**
+ * Retrieves the list of migrations
+ * @param {*} file 
+ * @param {*} client 
+ */
+async function listMigrations(client) {
+  return (await client.schema.withSchema('public').raw(`
+    SELECT *
+    FROM ${MIGRATION_TABLE_NAME};
+  `)).rows;
 }
