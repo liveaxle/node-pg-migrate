@@ -9,6 +9,7 @@ const log = require('log');
 const joi = require('joi');
 const path = require('path');
 const fs = require('fs');
+const chalk = require('chalk');
 const db = resolve('db');
 
 
