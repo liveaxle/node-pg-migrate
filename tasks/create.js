@@ -9,6 +9,7 @@ const log = require('log');
 const joi = require('joi');
 const path = require('path');
 const fs = require('fs');
+const chalk = require('chalk');
 const template = resolve(path.join('templates', 'migration.js'));
 
 /**
@@ -54,7 +55,7 @@ module.exports = async function(args={}) {
     fs.mkdirSync(dir);
   };
 
-  let name = migrationNameMappings[value.ordering](value.name, dir);
+  let name = migrationNameMappings[value.ordering](value.name.replace(/\s/gi, '-'), dir);
   let content = template(value.name);
 
   try {
@@ -63,7 +64,7 @@ module.exports = async function(args={}) {
     throw new Error(`Could not create file: ${e.message}`);
   }
 
-  console.log(`${LOG_PREFIX} - created migration in: ${path.join(dir, name)}`);
+  console.log(`${LOG_PREFIX} - ${chalk.green('created')} migration in: ${chalk.yellow(path.join(dir, name))}`);
 }
 
 /**
