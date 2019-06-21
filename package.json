@@ -1,6 +1,6 @@
 {
   "name": "@liveaxle/node-pg-migrate",
-  "version": "0.2.3",
+  "version": "0.2.4",
   "description": "Nodejs PostGreSQL migration assistant.",
   "main": "index.js",
   "scripts": {
