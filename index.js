@@ -44,13 +44,21 @@ const mappings = {
   'migration:create': tasks.create,
   'migration:up': tasks.migrate,
   'migration:down': tasks.migrate,
-  'migration:clear': tasks.clear,
+  'migration:reset': tasks.reset,
+  'migration:clear': tasks.reset,
   'migration:list': tasks.list,
   'migrate:create': tasks.create,
   'migrate:up': tasks.migrate,
   'migrate:down': tasks.migrate,
-  'migrate:clear': tasks.clear,
+  'migrate:reset': tasks.reset,
+  'migrate:clear': tasks.reset,
   'migrate:list': tasks.list,
+  'create': tasks.create,
+  'up': tasks.migrate,
+  'down': tasks.migrate,
+  'reset': tasks.reset,
+  'clear': tasks.reset,
+  'list': tasks.list,
   unknown: () => {}
 };
 

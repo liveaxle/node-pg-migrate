@@ -15,7 +15,7 @@ You'll notice all migrations generated are `async` functions. This does mean at 
 
 ## Usage 
 
-Add `"npgm": "node ./node_modules/@liveaxle/node-pg-migrate"` to the scripts section of your application's package.json so you don't have to type the whole binary path.
+Add `"npgm": "node ./node_modules/@liveaxle/node-pg-migrate"` to the `scripts` section of your application's package.json so you don't have to type the whole binary path.
 
 ## Configuration
 
@@ -69,7 +69,7 @@ These arguments can be passed as `--<arg name>` to all cli methods.
 
 ### Create a migration
 
-* `npm run npgm migration:create (<name> | --name)`
+* `npm run npgm create (<name> | --name)`
 
 | Name  | values  | required  | default  |
 |---|---|---|---|
@@ -78,7 +78,7 @@ These arguments can be passed as `--<arg name>` to all cli methods.
 
 ### Run UP migrations
 
-* `npm run npgm migration:up`
+* `npm run npgm up`
 
 | Name  | values  | required  | default  |
 |---|---|---|---|
@@ -88,7 +88,7 @@ These arguments can be passed as `--<arg name>` to all cli methods.
 
 ### Run DOWN migrations
 
-* `npm run npgm migration:down`
+* `npm run npgm down`
 
 | Name  | values  | required  | default  |
 |---|---|---|---|
@@ -97,8 +97,9 @@ These arguments can be passed as `--<arg name>` to all cli methods.
 |exclude | any specific migrations to ignore, if empty will run all.  Use one --flag per migration | no  | []  |
 
 
-### Clear migrations
+### Rest migrations
 
-* `npm run npgm migration:clear`
+* `npm run npgm reset`
 
-Will simply drop the migrations table from your database.
+Will simply drop the migrations table from your database. DOES NOT run `down` migrations. This is typicall most useful in a development setting.
+

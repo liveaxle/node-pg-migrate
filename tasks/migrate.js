@@ -29,7 +29,9 @@ const schema = joi.object().keys({
  */
 const mappings = {
   'migration:up': 'up',
-  'migration:down': 'down'
+  'migration:down': 'down',
+  'up': 'up',
+  'down': 'down'
 };
 
 /**
@@ -63,7 +65,8 @@ module.exports = async function(args={}, client, task) {
   // create if not
   if(!table) await db.migrations.create(client);
 
-  // Run the the ups
+  // Run migrations sequentially
+  // TODO RUN DOWNS IN REVERSE ORDER
   for(let i=0; i<files.length; i++) {
     let file = files[i];
     let name = file.split('.')[1];
@@ -78,18 +81,21 @@ module.exports = async function(args={}, client, task) {
     let fn = require(path.join(dir, file));
 
     try {
-      // run migration
+      // Output Status
       console.log(`${LOG_PREFIX} - running '${mappings[task]}' migration for: [${file}]`);
 
       // Check if migration has been run
       let state = (await db.migrations.status(file, client));
       // If state is same as current task, migration has been performed, skip.
       if(state === mappings[task]) {
+        // Output Status
         console.log(`${LOG_PREFIX} - '${mappings[task]}' migration for: [${file}] exists - ${chalk.yellow('skipping')}.`);
         continue;
       }
 
+      // Run Migration
       let result = (await fn[mappings[task]](client));
+      // Output Status
       console.log(`${LOG_PREFIX} - '${mappings[task]}' migration for: [${file}] - ${chalk.green('successful')}`);
 
       // Save migration run to migrations table

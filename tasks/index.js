@@ -7,12 +7,12 @@
  */
 const create = require('./create');
 const migrate = require('./migrate');
-const clear = require('./clear');
+const reset = require('./reset');
 const list = require('./list');
 
 /**
  * Tasks
  */
 module.exports = {
-  create, migrate, clear, list
+  create, migrate, reset, list
 };
