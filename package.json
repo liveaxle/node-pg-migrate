@@ -1,6 +1,6 @@
 {
   "name": "@liveaxle/node-pg-migrate",
-  "version": "0.2.4",
+  "version": "0.3.0",
   "description": "Synchronous (async/await) migration assistant for PostgreSQL",
   "main": "index.js",
   "scripts": {
@@ -12,7 +12,14 @@
   },
   "author": "liveaxle",
   "license": "ISC",
-  "keywords": ["postgres", "pgsql", "db", "migrate", "migration", "synchronous"],
+  "keywords": [
+    "postgres",
+    "pgsql",
+    "db",
+    "migrate",
+    "migration",
+    "synchronous"
+  ],
   "homepage": "https://bitbucket.org/liveaxle/node-db-migrate#readme",
   "dependencies": {
     "chalk": "^2.4.2",
