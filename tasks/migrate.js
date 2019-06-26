@@ -82,21 +82,21 @@ module.exports = async function(args={}, client, task) {
 
     try {
       // Output Status
-      console.log(`${LOG_PREFIX} - running '${mappings[task]}' migration for: [${file}]`);
+      console.log(`${LOG_PREFIX} - running '${mappings[task]}' migration for: [${chalk.cyan(file)}]`);
 
       // Check if migration has been run
       let state = (await db.migrations.status(file, client));
       // If state is same as current task, migration has been performed, skip.
       if(state === mappings[task]) {
         // Output Status
-        console.log(`${LOG_PREFIX} - '${mappings[task]}' migration for: [${file}] exists - ${chalk.yellow('skipping')}.`);
+        console.log(`${LOG_PREFIX} - '${mappings[task]}' migration for: [${chalk.cyan(file)}] exists - ${chalk.yellow('skipping')}.`);
         continue;
       }
 
       // Run Migration
       let result = (await fn[mappings[task]](client));
       // Output Status
-      console.log(`${LOG_PREFIX} - '${mappings[task]}' migration for: [${file}] - ${chalk.green('successful')}`);
+      console.log(`${LOG_PREFIX} - '${mappings[task]}' migration for: [${chalk.cyan(file)}] - ${chalk.green('successful')} \n`);
 
       // Save migration run to migrations table
       await db.migrations.save(file, mappings[task], client);
