@@ -1,16 +1,16 @@
 # Use the latest 2.1 version of CircleCI pipeline processing engine, see https://circleci.com/docs/2.0/configuration-reference/
 version: 2.1
-
+jobs:
+  release:
+    docker:
+      - image: circleci/node:12-alpine
+    working_directory: ~/src
+    steps:
+      - checkout
+      - run: npm install
+      - run: npm test
 workflows:
-  # Name the workflow "Welcome"
-  Welcome:
-    # Run the welcome/run job in its own container
+  version: 2
+  build:
     jobs:
-      build:
-        docker:
-            - image: circleci/node:12-alpine
-        steps:
-            - checkout
-            - run:
-                name: 'Running tests'
-                command: npm test
+      - release
