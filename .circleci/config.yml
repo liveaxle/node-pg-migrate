@@ -7,7 +7,7 @@ jobs:
     working_directory: ~/src
     steps:
       - checkout
-      -run:
+      - run:
           name: 'Installing Postgres'
           command : |
             sudo apt update
