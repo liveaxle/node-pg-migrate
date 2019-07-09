@@ -58,7 +58,7 @@ describe('Migrate', () => {
     });
 
     it('Should run created migrations' ,(done) => {
-      exec('node ./ up --user=postgres', (err, stdout, stderr) => {
+      exec('node ./ up', (err, stdout, stderr) => {
         console.log(err, stdout, stderr);
       })
     });
