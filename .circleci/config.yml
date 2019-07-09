@@ -5,6 +5,7 @@ jobs:
     docker:
       - image: circleci/node:12.6.0
       - image: postgres:9.6-alpine
+        name: postgres
         environment:
           POSTGRES_USER: $POSTGRES_USER
           POSTGRES_DB: $POSTGRES_DATABASE
@@ -28,6 +29,8 @@ jobs:
           name: Start Postgres
           command: |
             docker ps
+            docker run --network container:postgres \
+              appropriate/curl --retry 10 --retry-delay 1 --retry-connrefused http://localhost:8080/postgres/test
       - run: npm install
       - run: npm test
 workflows:
