@@ -11,8 +11,6 @@ jobs:
       - run:
           name: Installing AWS CLI
           command: |
-            # echo export 'AWS_ACCESS_KEY_ID=$DEV_ACCESS_KEY_ID' >> $BASH_ENV
-            # echo export 'AWS_SECRET_ACCESS_KEY=$DEV_SECRET_ACCESS_KEY' >> $BASH_ENV
             sudo apt-get install python-dev
             sudo apt-get install python3-dev
             sudo apt-get install python-pip
