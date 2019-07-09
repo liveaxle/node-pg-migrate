@@ -5,10 +5,10 @@ jobs:
     docker:
       - image: circleci/node:12.6.0
       - image: circleci/postgres:10
-      environment:
-        POSTGRES_DB: $POSTGRES_DATABASE
-        POSTGRES_USER: $POSTGRES_USER
-        POSTGRES_PASSWORD: $POSTGRES_PASSWORD
+        environment:
+          POSTGRES_DB: $POSTGRES_DATABASE
+          POSTGRES_USER: $POSTGRES_USER
+          POSTGRES_PASSWORD: $POSTGRES_PASSWORD
     working_directory: ~/src
     steps:
       - checkout
