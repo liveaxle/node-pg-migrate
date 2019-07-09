@@ -7,8 +7,8 @@ jobs:
     working_directory: ~/src
     steps:
       - checkout
-      - sudo apt update
-      - sudo apt install postgresql postgresql-contrib
+      - run: sudo apt update
+      - run: sudo apt install postgresql postgresql-contrib
       - run: npm install
       - run: npm test
       - run: whoami

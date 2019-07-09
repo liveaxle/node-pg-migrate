@@ -4,7 +4,8 @@
   "description": "Synchronous (async/await) migration assistant for PostgreSQL",
   "main": "index.js",
   "scripts": {
-    "test": "node ./spec"
+    "test": "node ./spec",
+    "ci:update": "git add . && git commit -m'ci update'&& git push"
   },
   "repository": {
     "type": "git",
