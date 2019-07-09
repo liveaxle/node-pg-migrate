@@ -28,7 +28,7 @@ jobs:
       - run:
           name: Start Postgres
           command: |
-            docker -D info
+            docker -D -H $DOCKER_HOST info
       - run: npm install
       - run: npm test
 workflows:
