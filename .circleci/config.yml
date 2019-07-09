@@ -12,20 +12,8 @@ jobs:
     working_directory: ~/src
     steps:
       - checkout
-      # - run:
-      #     name: 'Installing Postgres'
-      #     command : |
-      #       sudo apt update
-      #       sudo apt install postgresql postgresql-contrib
-      # - run:
-      #     name: 'Creating Test DB'
-      #     command: |
-      #       sudo -u postgres \<<'HERE'
-      #       createdb $POSTGRES_DATABASE
-      #       HERE
       - run: npm install
       - run: npm test
-      - run: whoami
 workflows:
   version: 2
   build:

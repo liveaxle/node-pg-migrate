@@ -56,5 +56,11 @@ describe('Migrate', () => {
         done();
       });
     });
+
+    it('Should run created migrations' ,(done) => {
+      exec('node ./ up', (err, stdout, stderr) => {
+        console.log(err, stdout, stderr);
+      })
+    });
   });
 });
