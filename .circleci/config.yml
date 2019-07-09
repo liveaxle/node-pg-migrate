@@ -27,6 +27,7 @@ jobs:
       - run:
           name: Start Postgres
           command: |
+            docker ps
             docker run -d -p 5432:5432 postgres:9.6-alpine
       - run: npm install
       - run: npm test
