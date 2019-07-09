@@ -4,12 +4,17 @@ jobs:
   release:
     docker:
       - image: circleci/node:12.6.0
-      - image: circleci/postgres:10
-        environment:
-          POSTGRES_DB: $POSTGRES_DATABASE
     working_directory: ~/src
     steps:
       - checkout
+      - run:
+          name: Install Docker Compose
+          command: |
+            curl -L https://github.com/docker/compose/releases/download/1.19.0/docker-compose-`uname -s`-`uname -m` > ~/docker-compose
+            chmod +x ~/docker-compose
+            sudo mv ~/docker-compose /usr/local/bin/docker-compose
+      - run: docker-compose up -d
+      - run: sleep 20
       - run: npm install
       - run: npm test
 workflows:
