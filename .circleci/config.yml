@@ -4,7 +4,7 @@ jobs:
   release:
     docker:
       - image: circleci/node:12.6.0
-      - image: postgres:9.6-alpine
+      - image: circleci/postgres:10
         name: postgres
         environment:
           POSTGRES_USER: $POSTGRES_USER
@@ -19,7 +19,7 @@ jobs:
       #       curl -L https://github.com/docker/compose/releases/download/1.19.0/docker-compose-`uname -s`-`uname -m` > ~/docker-compose
       #       chmod +x ~/docker-compose
       #       sudo mv ~/docker-compose /usr/local/bin/docker-compose
-      # - setup_remote_docker
+      - setup_remote_docker
       # - run: docker-compose up -d
       - run: sleep 20
       # - run: docker ps
