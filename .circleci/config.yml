@@ -27,9 +27,7 @@ jobs:
       - run:
           name: Start Postgres
           command: |
-            docker ps
-            docker run --network container:postgres:9.6-alpine --host $DOCKER_HOST \
-              appropriate/curl --retry 10 --retry-delay 1 --retry-connrefused http://localhost:8080/postgres/test
+           
       - run: npm install
       - run: npm test
 workflows:
