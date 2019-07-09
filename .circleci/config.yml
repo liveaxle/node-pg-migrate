@@ -4,6 +4,7 @@ jobs:
   release:
     docker:
       - image: circleci/node:12.6.0
+      - image: postgres:9.6-alpine
     working_directory: ~/src
     steps:
       - checkout
@@ -14,11 +15,15 @@ jobs:
       #       chmod +x ~/docker-compose
       #       sudo mv ~/docker-compose /usr/local/bin/docker-compose
       - setup_remote_docker
-      - run: docker-compose up -d
-      - run: sleep 20
-      - run: docker ps
-      - run: docker exec -d src_postgres_1 pg_ctl -D /var/lib/postgresql/data -l logfile start
-      - run: sleep 10
+      # - run: docker-compose up -d
+      # - run: sleep 20
+      # - run: docker ps
+      # - run: docker exec -d src_postgres_1 pg_ctl -D /var/lib/postgresql/data -l logfile start
+      # - run: sleep 10
+      - run:
+          name: Start Postgres
+          command: |
+            docker run -d -p 5432:5432 postgres:9.6-alpine
       - run: npm install
       - run: npm test
 workflows:
