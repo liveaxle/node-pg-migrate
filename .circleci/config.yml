@@ -4,20 +4,21 @@ jobs:
   release:
     docker:
       - image: circleci/node:12.6.0
+      - image: circleci/postgres:10
     working_directory: ~/src
     steps:
       - checkout
-      - run:
-          name: 'Installing Postgres'
-          command : |
-            sudo apt update
-            sudo apt install postgresql postgresql-contrib
-      - run:
-          name: 'Creating Test DB'
-          command: |
-            sudo -u postgres \<<'HERE'
-            createdb $POSTGRES_DATABASE
-            HERE
+      # - run:
+      #     name: 'Installing Postgres'
+      #     command : |
+      #       sudo apt update
+      #       sudo apt install postgresql postgresql-contrib
+      # - run:
+      #     name: 'Creating Test DB'
+      #     command: |
+      #       sudo -u postgres \<<'HERE'
+      #       createdb $POSTGRES_DATABASE
+      #       HERE
       - run: npm install
       - run: npm test
       - run: whoami
