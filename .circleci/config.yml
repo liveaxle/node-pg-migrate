@@ -15,9 +15,9 @@ jobs:
       - run:
           name: 'Creating Test DB'
           command: |
-            sudo -u postgres
+            sudo -u postgres <<'HERE'
             createdb $POSTGRES_DATABASE
-            sudo -u circleci
+            HERE
       - run: npm install
       - run: npm test
       - run: whoami
