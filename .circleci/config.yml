@@ -7,8 +7,17 @@ jobs:
     working_directory: ~/src
     steps:
       - checkout
-      - run: sudo apt update
-      - run: sudo apt install postgresql postgresql-contrib
+      -run:
+          name: 'Installing Postgres'
+          command : |
+            sudo apt update
+            sudo apt install postgresql postgresql-contrib
+      - run:
+          name: 'Creating Test DB'
+          command: |
+            sudo -u postgres
+            createdb $POSTGRES_DATABASE
+            sudo -u circleci
       - run: npm install
       - run: npm test
       - run: whoami
