@@ -4,28 +4,29 @@ jobs:
   release:
     docker:
       - image: circleci/node:12.6.0
-      - image: postgres:9.6-alpine
-        environment:
-          POSTGRES_USER: $POSTGRES_USER
-          POSTGRES_DB: $POSTGRES_DATABASE
-          POSTGRES_PASSWORD: $POSTGRES_PASSWORD
     working_directory: ~/src
     steps:
       - checkout
-      # - run:
-      #     name: Install Docker Compose
-      #     command: |
-      #       curl -L https://github.com/docker/compose/releases/download/1.19.0/docker-compose-`uname -s`-`uname -m` > ~/docker-compose
-      #       chmod +x ~/docker-compose
-      #       sudo mv ~/docker-compose /usr/local/bin/docker-compose
-      # - setup_remote_docker
-      # - run: docker-compose up -d
-      # - run: sleep 20
-      # - run: docker ps
-      # - run: docker exec -d src_postgres_1 pg_ctl -D /var/lib/postgresql/data -l logfile start
-      # - run: sleep 10
-
+      - run: sudo apt-get update
+      - run:
+          name: Installing AWS CLI
+          command: |
+            echo export 'AWS_ACCESS_KEY_ID=$DEV_ACCESS_KEY_ID' >> $BASH_ENV
+            echo export 'AWS_SECRET_ACCESS_KEY=$DEV_SECRET_ACCESS_KEY' >> $BASH_ENV
+            sudo apt-get install python-dev
+            sudo apt-get install python3-dev
+            sudo apt-get install python-pip
+            sudo pip install awscli
+            source $BASH_ENV
       - run: npm install
+      - run:
+          name: 'Creating Test DB'
+          command: |
+            aws rds create-db-instance --db-name=$POSTGRES_DATABASE \
+              --db-instance-identifier=node-pg-migrate \
+              --db-instance-class=t2.micro --engine=postgres --engine-version=10 \
+              --master-username=$POSTGRES_USER --master-user-password=$POSTGRES_PASSWORD \
+              --no-deletion-protection --db-security-groups=$AWS_SECURITY_GROUP
       - run: npm test
 workflows:
   version: 2
