@@ -20,7 +20,7 @@ jobs:
           name: 'Creating Test DB'
           command: |
             aws rds create-db-instance --db-name=$POSTGRES_DATABASE \
-              --db-instance-identifier=$AWS_DB_INSTANCE_IDENTIFIER \
+              --db-instance-identifier=$AWS_DB_INSTANCE_IDENTIFIER --allocated-storage=20 \
               --db-instance-class=db.t2.micro --engine=postgres --engine-version=10 \
               --master-username=$POSTGRES_USER --master-user-password=$POSTGRES_PASSWORD \
               --no-deletion-protection --vpc-security-group-ids=$AWS_SECURITY_GROUP --region=$AWS_REGION
