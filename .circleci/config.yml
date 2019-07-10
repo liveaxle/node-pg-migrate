@@ -23,7 +23,7 @@ jobs:
               --db-instance-identifier=$AWS_DB_INSTANCE_IDENTIFIER \
               --db-instance-class=db.t2.micro --engine=postgres --engine-version=10 \
               --master-username=$POSTGRES_USER --master-user-password=$POSTGRES_PASSWORD \
-              --no-deletion-protection --db-security-groups=$AWS_SECURITY_GROUP --region=$AWS_REGION
+              --no-deletion-protection --vpc-security-group-ids=$AWS_SECURITY_GROUP --region=$AWS_REGION
       - run: npm test
 workflows:
   version: 2
