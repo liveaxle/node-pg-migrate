@@ -31,7 +31,7 @@ jobs:
       - run:
           name: 'Getting/Setting Test DB URL'
           command: |
-            HOST=$(aws rds describe-db-instances --region=$AWS_REGION --query="DBInstances[?DBInstanceIdentifier==node-pg-migrate].[Endpoint.Address]" --output=text)
+            HOST=$(aws rds describe-db-instances --region=$AWS_REGION --query="DBInstances[?DBInstanceIdentifier=='node-pg-migrate'].[Endpoint.Address]" --output=text)
             echo "export POSTGRES_HOST=$HOST" >> $BASH_ENV
             source $BASH_ENV
       - run: echo $POSTGRES_HOST
