@@ -59,7 +59,13 @@ describe('Migrate', () => {
 
     it('Should run created migrations' ,(done) => {
       exec('node ./ up', (err, stdout, stderr) => {
-        console.log(err, stdout, stderr);
+        done();
+      })
+    });
+
+    it('Should list migrations' ,(done) => {
+      exec('node ./ list', (err, stdout, stderr) => {
+        done();
       })
     });
   });
