@@ -31,12 +31,18 @@ jobs:
       - run:
           name: 'Getting/Setting Test DB URL'
           command: |
-            HOST=$(aws rds describe-db-instances --region=$AWS_REGION --query="DBInstances[?DBInstanceIdentifier==$AWS_DB_INSTANCE_IDENTIFIER].[Endpoint.Address]" --output=text)
+            HOST=$(aws rds describe-db-instances --region=$AWS_REGION --query="DBInstances[?DBInstanceIdentifier==node-pg-migrate].[Endpoint.Address]" --output=text)
             echo "export POSTGRES_HOST=$HOST" >> $BASH_ENV
             source $BASH_ENV
       - run: echo $POSTGRES_HOST
       - run: npm test
-      - run: aws rds delete-db-instance --region=$AWS_REGION --db-instance-identifier=$AWS_DB_INSTANCE_IDENTIFIER --skip-final-snapshot
+      - run: 
+          name: 'Deleting Test DB'
+          when: always
+          command: | 
+            aws rds delete-db-instance --region=$AWS_REGION \
+            --db-instance-identifier=$AWS_DB_INSTANCE_IDENTIFIER \
+            --skip-final-snapshot
 workflows:
   version: 2
   build:
