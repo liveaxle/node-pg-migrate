@@ -38,8 +38,8 @@ const mappings = {
  * Task ordering
  */
 const order = {
-  'up': 'migrateUp',
-  'down': 'migrateDown'
+  'up': migrateUp,
+  'down': migrateDown
 };
 
 /**
@@ -74,7 +74,7 @@ module.exports = async function(args={}, client, task) {
   if(!table) await db.migrations.create(client);
 
   // Run migrations sequentially
-  eval(order[mappings[task]])(files.length, async index => {
+  order[mappings[task]](files.length, async index => {
     let file = files[index];
     let name = file.split('.')[1];
 
