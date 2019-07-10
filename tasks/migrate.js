@@ -35,6 +35,14 @@ const mappings = {
 };
 
 /**
+ * Task ordering
+ */
+const order = {
+  'up': migrateUp,
+  'down': migrateDown
+};
+
+/**
  * Up
  */
 module.exports = async function(args={}, client, task) {
@@ -66,18 +74,17 @@ module.exports = async function(args={}, client, task) {
   if(!table) await db.migrations.create(client);
 
   // Run migrations sequentially
-  // TODO RUN DOWNS IN REVERSE ORDER
-  for(let i=0; i<files.length; i++) {
-    let file = files[i];
+  order[mappings[task]](files.length, async index => {
+    let file = files[index];
     let name = file.split('.')[1];
 
-    // if includes were specified and name wasn't found, skip.
-    if(value.include.length && value.include.indexOf(name) === -1) continue;
+    // If includes were specified and name wasn't found, skip.
+    if(value.include.length && value.include.indexOf(name) === -1) return;
 
     // If exludes has length and name is found, skip;
-    if(value.exclude.length && value.exclude.indexOf(name) !== -1) continue;
+    if(value.exclude.length && value.exclude.indexOf(name) !== -1) return;
 
-    // require each file
+    // Require each file
     let fn = require(path.join(dir, file));
 
     try {
@@ -90,7 +97,7 @@ module.exports = async function(args={}, client, task) {
       if(state === mappings[task]) {
         // Output Status
         console.log(`${LOG_PREFIX} - '${mappings[task]}' migration for: [${chalk.cyan(file)}] exists - ${chalk.yellow('skipping')}.`);
-        continue;
+        return;
       }
 
       // Run Migration
@@ -102,7 +109,28 @@ module.exports = async function(args={}, client, task) {
       await db.migrations.save(file, mappings[task], client);
     } catch(e) {
       throw new Error(`'${mappings[task]}' migration for: [${file}] - ${chalk.red('failed')}: ${e.message}`);
-      break;
     }
-  } 
+  });
+}
+
+/**
+ * migrateUp - Runs the migration callback in sequential order.
+ * @param {int} max 
+ * @param {Function} callback 
+ */
+function migrateUp(max, callback) {
+  for(let i=0; i<max; i++) {
+    callback(i);
+  }
+}
+
+/**
+ * migrateDown - Runs the migration callback in reverse sequential order.
+ * @param {int} max 
+ * @param {Function} callback 
+ */
+function migrateDown(max, callback) {
+  for(let i=max; i>0; i--) {
+    callback(i);
+  }
 }
