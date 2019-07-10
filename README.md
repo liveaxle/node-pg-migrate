@@ -15,7 +15,7 @@ You'll notice all migrations generated are `async` functions. This does mean at 
 
 `npm install @liveaxle/node-pg-migrate`
 
-## Usage 
+## Usage
 
 Add `"npgm": "node ./node_modules/@liveaxle/node-pg-migrate"` to the `scripts` section of your application's package.json so you don't have to type the whole binary path.
 
@@ -76,6 +76,15 @@ These arguments can be passed as `--<arg name>` to all cli methods.
 | Name  | values  | required  | default  |
 |---|---|---|---|
 |ordering | sequential,timestamp  | no  | sequential  |
+|directory | path to your migrations dir  | yes, can be in .rc  | 'migrations'  |
+
+### Create a migration before another existing migration
+
+* `npm run npgm create -- --name <name> --before <othername>`
+
+| Name  | values  | required  | default  |
+|---|---|---|---|
+|ordering | sequential  | no  | sequential  |
 |directory | path to your migrations dir  | yes, can be in .rc  | 'migrations'  |
 
 ### Run UP migrations
