@@ -8,7 +8,7 @@
 const path = require('path');
 const Mocha = require('mocha');
 const fs = require('fs');
-const mocha = new Mocha({reporter: 'nyan', fullTrace: false});
+const mocha = new Mocha({reporter: 'mochawesome', fullTrace: false});
 const args = require('minimist')(process.argv.slice(2));
 const {exec} = require('child_process');
 
