@@ -4,61 +4,29 @@ jobs:
   release:
     docker:
       - image: circleci/node:12.6.0
+      - image: postgres:9.6-alpine
     working_directory: ~/src
     steps:
       - checkout
-      - run: sudo apt-get update
-      - run:
-          name: Installing AWS CLI
-          command: |
-            sudo apt-get install python-dev
-            sudo apt-get install python3-dev
-            sudo apt-get install python-pip
-            sudo pip install awscli
       - run:
           name: 'Installing Dependencies'
           command: |
             npm install
       - run:
-          name: 'Creating Test DB'
+          name: 'Confirming Postgres Status'
           command: |
-            aws rds create-db-instance --db-name=$POSTGRES_DATABASE \
-              --db-instance-identifier=$AWS_DB_INSTANCE_IDENTIFIER --allocated-storage=20 \
-              --db-instance-class=db.t2.micro --engine=postgres --engine-version=10 \
-              --master-username=$POSTGRES_USER --master-user-password=$POSTGRES_PASSWORD \
-              --no-deletion-protection --vpc-security-group-ids=$AWS_SECURITY_GROUP --region=$AWS_REGION
-      - run:
-          name: 'Waiting for Test DB to beocome available.'
-          command: | 
-            aws rds wait db-instance-available --db-instance-identifier=$AWS_DB_INSTANCE_IDENTIFIER --region=$AWS_REGION
-      - run:
-          name: 'Getting/Setting Test DB URL'
-          command: |
-            HOST=$(aws rds describe-db-instances --region=$AWS_REGION --query="DBInstances[?DBInstanceIdentifier=='$AWS_DB_INSTANCE_IDENTIFIER'].[Endpoint.Address]" --output=text)
-            echo "export POSTGRES_HOST=$HOST" >> $BASH_ENV
-            source $BASH_ENV
-      - run:
-          name: 'Running Unit Tests'
-          command: |
-            npm run test:ci
-      - run: 
-          name: 'Deleting Test DB'
-          when: always
-          command: | 
-            aws rds delete-db-instance --region=$AWS_REGION \
-            --db-instance-identifier=$AWS_DB_INSTANCE_IDENTIFIER \
-            --skip-final-snapshot
-      - run:
-          name: 'Confirming DB Deletion'
-          when: always
-          command: |
-            aws rds wait db-instance-deleted --db-instance-identifier=$AWS_DB_INSTANCE_IDENTIFIER --region=$AWS_REGION
-      - store_test_results:
-          path: test-results
-      - run:
-          name: 'Running Code Coverage'
-          command: |
-            npm run codecov
+            sudo /etc/init.d/postgresql status
+            sudo service postgresql status
+      # - run:
+      #     name: 'Running Unit Tests'
+      #     command: |
+      #       npm run test:ci
+      # - store_test_results:
+      #     path: test-results
+      # - run:
+      #     name: 'Running Code Coverage'
+      #     command: |
+      #       npm run codecov
 workflows:
   version: 2
   build:
