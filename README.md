@@ -1,6 +1,7 @@
 # node-pg-migrate
 
 ![build badge](https://img.shields.io/circleci/build/bitbucket/liveaxle/node-db-migrate/master.svg)
+![greenkeeper](https://badges.greenkeeper.io/liveaxle/node-pg-migrate.svg)
 
 This is a cli module that assists in creating and running Postgres Migrations using async/await.
 
