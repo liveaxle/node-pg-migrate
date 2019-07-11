@@ -9,7 +9,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@bitbucket.org/liveaxle/node-db-migrate.git"
+    "url": "git+ssh://git@github.com:liveaxle/node-pg-migrate.git"
   },
   "author": "liveaxle",
   "license": "ISC",
@@ -21,7 +21,7 @@
     "migration",
     "synchronous"
   ],
-  "homepage": "https://bitbucket.org/liveaxle/node-db-migrate#readme",
+  "homepage": "https://github.com/liveaxle/node-pg-migrate",
   "dependencies": {
     "chalk": "^2.4.2",
     "cli": "^1.0.1",
