@@ -19,7 +19,6 @@ jobs:
           name: 'Installing Dependencies'
           command: |
             npm install
-            npm install -g codecov
       - run:
           name: 'Creating Test DB'
           command: |
@@ -53,7 +52,11 @@ jobs:
             aws rds wait db-instance-deleted --db-instance-identifier=$AWS_DB_INSTANCE_IDENTIFIER --region=$AWS_REGION
       - store_test_results:
           path: test-results
-      - run: codecov
+      - run:
+          name: 'Running Code Coverage'
+          command: |
+            ./node_modules/.bin/instanbul colde ./node_modules/.bin/_mocha -- -R spec
+            ./node_modules/.bin/codecov
 workflows:
   version: 2
   build:
