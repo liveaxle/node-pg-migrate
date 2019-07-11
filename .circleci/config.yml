@@ -3,8 +3,7 @@ version: 2.1
 jobs:
   release:
     docker:
-      - image: circleci/node:12.6.0
-      - image: postgres:9.6-alpine
+      - image: zdvkm/node-postgres
     working_directory: ~/src
     steps:
       - checkout
