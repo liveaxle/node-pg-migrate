@@ -1,5 +1,7 @@
 # node-pg-migrate
 
+![npm url](https://img.shields.io/npm/v/@liveaxle/node-pg-migrate.svg)
+![downloads](https://img.shields.io/npm/dw/@liveaxle/node-pg-migrate.svg)
 ![build badge](https://img.shields.io/circleci/build/bitbucket/liveaxle/node-db-migrate/master.svg)
 ![greenkeeper](https://badges.greenkeeper.io/liveaxle/node-pg-migrate.svg)
 
