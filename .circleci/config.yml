@@ -40,7 +40,7 @@ jobs:
       - run:
           name: 'Running Unit Tests'
           command: |
-            npm test
+            npm run test:ci
       - run: 
           name: 'Deleting Test DB'
           when: always

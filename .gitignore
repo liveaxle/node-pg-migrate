@@ -6,3 +6,4 @@ migrations
 mochawesome-report
 coverage
 .nyc_output
+test-results

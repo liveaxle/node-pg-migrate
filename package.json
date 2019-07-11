@@ -4,7 +4,8 @@
   "description": "Synchronous (async/await) migration assistant for PostgreSQL",
   "main": "index.js",
   "scripts": {
-    "test": "./node_modules/.bin/nyc --timeout=5000 ./node_modules/.bin/mocha",
+    "test": "./node_modules/.bin/nyc --timeout=5000 ./node_modules/.bin/mocha --reporter=mocha-junit-reporter",
+    "test:ci": "./node_modules/.bin/nyc --timeout=5000 ./node_modules/.bin/mocha --reporter=mocha-junit-reporter --reporter-options mochaFile=./test-results/mocha/results.xml",
     "ci:update": "git add . && git commit -m'ci update'&& git push",
     "istanbul": "./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha ./spec/**/*.js",
     "codecov": "./node_modules/.bin/codecov"
