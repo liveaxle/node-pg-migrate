@@ -48,7 +48,7 @@ jobs:
           command: |
             aws rds wait db-instance-deleted --db-instance-identifier=$AWS_DB_INSTANCE_IDENTIFIER --region=$AWS_REGION
       - store_test_results:
-          path: ./test-results/mocha/results.xml
+          path: test-results
 workflows:
   version: 2
   build:
