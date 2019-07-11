@@ -47,7 +47,7 @@ jobs:
           when: always
           command: |
             aws rds wait db-instance-deleted --db-instance-identifier=$AWS_DB_INSTANCE_IDENTIFIER --region=$AWS_REGION
-      - store-test-results:
+      - store_test_results:
           path: mochawesome-report/mochawesome.json
 workflows:
   version: 2
