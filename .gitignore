@@ -4,3 +4,5 @@ node_modules
 migrations
 .npgmrc
 mochawesome-report
+coverage
+.nyc-output

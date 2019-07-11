@@ -18,13 +18,23 @@ const {exec} = require('child_process');
 const expect = chai.expect;
 const assert = chai.assert;
 
+
+function reset(cb) {
+  exec('rm -rf ./migrations', () => {
+    setTimeout(() => {
+      cb();
+    }, 250);
+  });
+}
+  
+  
 /**
  * 
  */
 describe('Migrate', () => {
 
   before((done) => {
-    global.runner.reset(done);
+    reset(done);
   });
 
   describe('Create',  () => {
@@ -35,7 +45,7 @@ describe('Migrate', () => {
         assert.lengthOf(file, 1, 'File was not created.');
         assert.isNumber(parseInt(file[0].split('.')[0]));
 
-        global.runner.reset(done);
+        reset(done);
       });
     });
 

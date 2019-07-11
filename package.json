@@ -4,8 +4,10 @@
   "description": "Synchronous (async/await) migration assistant for PostgreSQL",
   "main": "index.js",
   "scripts": {
-    "test": "node ./spec",
-    "ci:update": "git add . && git commit -m'ci update'&& git push"
+    "test": "./node_modules/.bin/nyc --timeout=5000 ./node_modules/.bin/mocha",
+    "ci:update": "git add . && git commit -m'ci update'&& git push",
+    "istanbul": "./node_modules/.bin/istanbul cover ./node_modules/.bin/_mocha ./spec/**/*.js",
+    "codecov": "./node_modules/.bin/codecov"
   },
   "repository": {
     "type": "git",
@@ -40,6 +42,7 @@
     "codecov": "^3.5.0",
     "istanbul": "^0.4.5",
     "mocha": "^6.1.4",
-    "mocha-junit-reporter": "^1.23.0"
+    "mocha-junit-reporter": "^1.23.0",
+    "nyc": "^14.1.1"
   }
 }
