@@ -38,6 +38,6 @@
     "assert": "^2.0.0",
     "chai": "^4.2.0",
     "mocha": "^6.1.4",
-    "mochawesome": "^4.0.1"
+    "mocha-junit-reporter": "^1.23.0"
   }
 }

@@ -34,7 +34,7 @@ jobs:
             HOST=$(aws rds describe-db-instances --region=$AWS_REGION --query="DBInstances[?DBInstanceIdentifier=='$AWS_DB_INSTANCE_IDENTIFIER'].[Endpoint.Address]" --output=text)
             echo "export POSTGRES_HOST=$HOST" >> $BASH_ENV
             source $BASH_ENV
-      - run: npm test
+      - run: npm test -- --reporter=mocha-junit-reporter
       - run: 
           name: 'Deleting Test DB'
           when: always

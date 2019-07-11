@@ -8,9 +8,17 @@
 const path = require('path');
 const Mocha = require('mocha');
 const fs = require('fs');
-const mocha = new Mocha({reporter: 'mochawesome', fullTrace: false});
 const args = require('minimist')(process.argv.slice(2));
 const {exec} = require('child_process');
+
+/**
+ * Mocha Instance
+ */
+const mocha = new Mocha({reporter: args.reporter || 'nyan', reporterOptions:{
+  mochaFile: './test-results/mocha/results.xml'
+}, fullTrace: false});
+
+
 
 /**
  * Global helper api.
