@@ -18,8 +18,6 @@ const mocha = new Mocha({reporter: args.reporter || 'nyan', reporterOptions:{
   mochaFile: './test-results/mocha/results.xml'
 }, fullTrace: false});
 
-
-
 /**
  * Global helper api.
  */
