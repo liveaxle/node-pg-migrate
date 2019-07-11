@@ -5,4 +5,4 @@ migrations
 .npgmrc
 mochawesome-report
 coverage
-.nyc-output
+.nyc_output
