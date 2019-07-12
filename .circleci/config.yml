@@ -33,7 +33,7 @@ jobs:
       - run:
           name: 'Running Code Coverage'
           command: |
-            ls -l coverage
+            ls -l ./
             npm run codecov
 workflows:
   version: 2
