@@ -21,12 +21,10 @@ jobs:
             sudo -u postgres psql -p 5432 -c "alter user $POSTGRES_USER with superuser;"
             sudo -u postgres psql -p 5432 -c "create database $POSTGRES_DATABASE;"
             sudo -u postgres psql -p 5432 -c "grant all privileges on database $POSTGRES_DATABASE to $POSTGRES_USER;"
-
- 
-      # - run:
-      #     name: 'Running Unit Tests'
-      #     command: |
-      #       npm run test:ci
+      - run:
+          name: 'Running Unit Tests'
+          command: |
+            npm run test:ci
       # - store_test_results:
       #     path: test-results
       # - run:
