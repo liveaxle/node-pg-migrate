@@ -67,8 +67,8 @@ describe('Migrate', () => {
       });
     });
 
-    it('Should run created migrations' ,(done) => {
-      exec('node ./ up', (err, stdout, stderr) => {
+    it('Should run up created migrations - sequential' ,(done) => {
+      exec('node ./ up --directory=./test/migrations/sequential --ordering=sequential', (err, stdout, stderr) => {
         done();
       })
     });
