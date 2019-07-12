@@ -74,7 +74,7 @@ module.exports = async function(args={}, client, task) {
   if(!table) await db.migrations.create(client);
 
   // Run migrations sequentially
-  order[mappings[task]](files.length, async index => {
+  await order[mappings[task]](files.length, async index => {
     let file = files[index];
     let name = file.split('.')[1];
 
@@ -106,7 +106,7 @@ module.exports = async function(args={}, client, task) {
       console.log(`${LOG_PREFIX} - '${mappings[task]}' migration for: [${chalk.cyan(file)}] - ${chalk.green('successful')} \n`);
 
       // Save migration run to migrations table
-      await db.migrations.save(file, mappings[task], client);
+      return await db.migrations.save(file, mappings[task], client);
     } catch(e) {
       throw new Error(`'${mappings[task]}' migration for: [${file}] - ${chalk.red('failed')}: ${e.message}`);
     }
@@ -118,9 +118,9 @@ module.exports = async function(args={}, client, task) {
  * @param {int} max 
  * @param {Function} callback 
  */
-function migrateUp(max, callback) {
+async function migrateUp(max, callback) {
   for(let i=0; i<max; i++) {
-    callback(i);
+    await callback(i);
   }
 }
 
@@ -129,8 +129,8 @@ function migrateUp(max, callback) {
  * @param {int} max 
  * @param {Function} callback 
  */
-function migrateDown(max, callback) {
-  for(let i=max; i>0; i--) {
-    callback(i);
+async function migrateDown(max, callback) {
+  for(let i=max-1; i>=0; i--) {
+    await callback(i);
   }
 }
