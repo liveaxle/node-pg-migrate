@@ -1,6 +1,6 @@
 {
   "name": "@liveaxle/node-pg-migrate",
-  "version": "0.4.6",
+  "version": "0.4.7",
   "description": "Synchronous (async/await) migration assistant for PostgreSQL",
   "main": "index.js",
   "scripts": {
