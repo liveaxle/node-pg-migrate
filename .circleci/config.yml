@@ -24,6 +24,7 @@ jobs:
       - run:
           name: 'Running Unit Tests'
           command: |
+            npm run test
             npm run test:ci
       # - store_test_results:
       #     path: test-results
