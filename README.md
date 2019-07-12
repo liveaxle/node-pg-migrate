@@ -18,10 +18,10 @@ You'll notice all migrations generated are `async` functions. This does mean at 
 
 ### Why *another* migration library.
 
-I (@ktstowell) personally dislike the fragementaion of javascript libraries, however I felt compelled to make this based on the following reasons:
+I (@ktstowell) personally dislike the fragmentation of javascript libraries, however I felt compelled to make this based on the following reasons:
 
 * `async/await`
-  * Every other library I found was still using promises, and even a single global promise per execution instance - I weighed the cost of trying to PR a change to those libraries versus making a new library from scratch. Obvisouly I favoured making a new library.
+  * Every other library I found was still using promises, and even a single global promise per execution instance - I weighed the cost of trying to PR a change to those libraries versus making a new library from scratch. Obviously I favoured making a new library.
 * Exception management
   * At the time i was looking for a migration library, I needed something that would let me choose how to handle exceptions in my migrations. It seemed that even if I attempted to catch/swallow them the runner would still abort the process.
 * Exclusions
