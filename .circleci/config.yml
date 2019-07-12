@@ -18,6 +18,11 @@ jobs:
             sudo service postgresql start
             sudo service postgresql status
             sudo -u postgres psql -p 5432 -c "create user $POSTGRES_USER with password '$POSTGRES_PASSWORD';"
+            sudo -u postgres psql -p 5432 -c "alter user $POSTGRES_USER with superuser;"
+            sudo -u postgres psql -p 5432 -c "create database $POSTGRES_DATABASE;"
+            sudo -u postgres psql -p 5432 -c "grant all privileges on database $POSTGRES_DATABASE to $POSTGRES_USER;"
+
+ 
       # - run:
       #     name: 'Running Unit Tests'
       #     command: |
