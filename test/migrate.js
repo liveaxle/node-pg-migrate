@@ -78,6 +78,8 @@ describe('Migrate', () => {
       exec('node ./ up --directory=test/migrations/sequential --ordering=sequential', (err, stdout, stderr) => {
         let db = client(args);
         
+        db.schema.raw(`SELECT * FROM pg_catalog.pg_tables;`).then(res => {console.log(res)});
+
         db('users').select('*').then(rows => {
           assert.lengthOf(rows, 3);
         }).then(() => {
