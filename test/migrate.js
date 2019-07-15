@@ -13,6 +13,7 @@ const {exec} = require('child_process');
 const {client} = require('../db');
 const args = require('minimist')(process.argv.slice(2));
 
+console.log(args)
 //
 // Chai constants
 //------------------------------------------------------------------------------------------//
