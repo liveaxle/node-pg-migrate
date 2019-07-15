@@ -38,9 +38,6 @@ function reset(cb) {
 describe('Migrate', () => {
 
   before((done) => {
-    exec('pwd && ls -l ./test/migrations', (err, stdout) => {
-      console.log(stdout)
-    })
     reset(done);
   });
 
@@ -77,9 +74,6 @@ describe('Migrate', () => {
     it('Should run up created migrations - sequential' , (done) => {
       exec('node ./ up --directory=test/migrations/sequential --ordering=sequential', (err, stdout, stderr) => {
         let db = client(args);
-        console.log(err);
-        console.log(stdout);
-        console.log(stderr);
 
         db('users').select('*').then(rows => {
           assert.lengthOf(rows, 3);
@@ -141,7 +135,6 @@ describe('Migrate', () => {
         }).then(done);
       })
     });
-
 
     it('Should list migrations' ,() => {
       exec('node ./ list', (err, stdout, stderr) => {
