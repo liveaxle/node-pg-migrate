@@ -7,8 +7,10 @@
   */
 const chai = require('chai');
 const path = require('path');
+const dotenv = require('dotenv').config({path: path.join(process.cwd(), '.env')});
 const fs = require('fs');
 const {exec} = require('child_process');
+const {client} = require('../db');
 
 //
 // Chai constants
@@ -67,15 +69,73 @@ describe('Migrate', () => {
       });
     });
 
-    it('Should run up created migrations - sequential' ,(done) => {
-      exec('node ./ up --directory=./test/migrations/sequential --ordering=sequential', (err, stdout, stderr) => {
-        done();
+    it('Should run up created migrations - sequential' , (done) => {
+      exec('node ./ up --directory=test/migrations/sequential --ordering=sequential', (err, stdout, stderr) => {
+        let db = client();
+
+        db('users').select('*').then(rows => {
+          assert.lengthOf(rows, 3);
+        }).then(() => {
+          return db('books').select('*');
+        }).then(rows => {
+          assert.lengthOf(rows, 3);
+        }).then(() => {
+          return db('authors').select('*');
+        }).then(rows => {
+          assert.lengthOf(rows, 3);
+        }).then(done);
       })
     });
 
-    it('Should list migrations' ,(done) => {
+    it('Should should skip any migrations that have already been executed - sequential' , (done) => {
+      exec('node ./ up --directory=test/migrations/sequential --ordering=sequential', (err, stdout, stderr) => {
+        let db = client();
+
+        db('users').select('*').then(rows => {
+          assert.lengthOf(rows, 3);
+        }).then(() => {
+          return db('books').select('*');
+        }).then(rows => {
+          assert.lengthOf(rows, 3);
+        }).then(() => {
+          return db('authors').select('*');
+        }).then(rows => {
+          assert.lengthOf(rows, 3);
+        }).then(done);
+      })
+    });
+
+    it('Should run down migrations - sequential' , (done) => {
+      exec('node ./ down --directory=test/migrations/sequential --ordering=sequential', (err, stdout, stderr) => {
+        let db = client();
+
+        db('users').select('*').then(rows => {
+          if(rows.length) throw new Error('Users Table was not dropped - down migration unsuccessful');
+        }, (e) => {
+          assert.isNotNull(e);
+        });
+        
+        db('books').select('*').then(rows => {
+          if(rows.length) throw new Error('Users Table was not dropped - down migration unsuccessful');
+        }, (e) => {
+          assert.isNotNull(e);
+        });
+
+        db('authors').select('*').then(rows => {
+          if(rows.length) throw new Error('Users Table was not dropped - down migration unsuccessful');
+        }, (e) => {
+          assert.isNotNull(e);
+        }).then(done);
+      })
+    });
+
+
+    it('Should list migrations' ,() => {
       exec('node ./ list', (err, stdout, stderr) => {
-        done();
+        assert.isNotNull(stdout.match(/users/gi))
+        assert.isNotNull(stdout.match(/books/gi))
+        assert.isNotNull(stdout.match(/authors/gi));
+        process.exit(0)
       })
     });
   });
