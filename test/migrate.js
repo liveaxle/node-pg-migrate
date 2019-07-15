@@ -36,6 +36,9 @@ function reset(cb) {
 describe('Migrate', () => {
 
   before((done) => {
+    exec('pwd && ls -l', (err, stdout) => {
+      console.log(stdout)
+    })
     reset(done);
   });
 
@@ -105,6 +108,7 @@ describe('Migrate', () => {
           assert.lengthOf(rows, 3);
         }).then(done).catch(e => {
           console.log(e.message);
+          
         });
       })
     });
