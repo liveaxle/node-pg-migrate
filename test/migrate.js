@@ -38,7 +38,7 @@ function reset(cb) {
 describe('Migrate', () => {
 
   before((done) => {
-    exec('pwd && ls -l', (err, stdout) => {
+    exec('pwd && ls -l ./test/migrations', (err, stdout) => {
       console.log(stdout)
     })
     reset(done);
