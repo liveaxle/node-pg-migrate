@@ -28,7 +28,7 @@ jobs:
           name: 'Running Unit Tests'
           command: |
             # npm run test:ci
-            npm test --user=$POSTGRES_USER --host=$POSTGRES_HOST --port=$POSTGRES_PORT --db=$POSTGRES_DATABASE --password=$POSTGRES_PASSWORD
+            npm test -- --user=$POSTGRES_USER --host=$POSTGRES_HOST --port=$POSTGRES_PORT --db=$POSTGRES_DATABASE --password=$POSTGRES_PASSWORD
       - store_test_results:
           path: test-results
       - run:
