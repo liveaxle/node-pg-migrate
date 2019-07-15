@@ -83,7 +83,9 @@ describe('Migrate', () => {
           return db('authors').select('*');
         }).then(rows => {
           assert.lengthOf(rows, 3);
-        }).then(done);
+        }).then(done).catch(e => {
+          console.log(e.message);
+        });;
       })
     });
 
