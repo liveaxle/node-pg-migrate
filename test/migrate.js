@@ -80,8 +80,6 @@ describe('Migrate', () => {
         console.log(err);
         console.log(stdout);
         console.log(stderr);
-        
-        db.schema.raw(`SELECT * FROM pg_catalog.pg_tables;`).then(res => {console.log(res)});
 
         db('users').select('*').then(rows => {
           assert.lengthOf(rows, 3);
