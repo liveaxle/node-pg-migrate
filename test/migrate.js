@@ -11,6 +11,7 @@ const dotenv = require('dotenv').config({path: path.join(process.cwd(), '.env')}
 const fs = require('fs');
 const {exec} = require('child_process');
 const {client} = require('../db');
+const args = require('minimist')(process.argv.slice(2));
 
 //
 // Chai constants
@@ -74,8 +75,8 @@ describe('Migrate', () => {
 
     it('Should run up created migrations - sequential' , (done) => {
       exec('node ./ up --directory=test/migrations/sequential --ordering=sequential', (err, stdout, stderr) => {
-        let db = client();
-
+        let db = client(args);
+        
         db('users').select('*').then(rows => {
           assert.lengthOf(rows, 3);
         }).then(() => {
@@ -94,7 +95,7 @@ describe('Migrate', () => {
 
     it('Should should skip any migrations that have already been executed - sequential' , (done) => {
       exec('node ./ up --directory=test/migrations/sequential --ordering=sequential', (err, stdout, stderr) => {
-        let db = client();
+        let db = client(args);
 
         db('users').select('*').then(rows => {
           assert.lengthOf(rows, 3);
@@ -115,7 +116,7 @@ describe('Migrate', () => {
 
     it('Should run down migrations - sequential' , (done) => {
       exec('node ./ down --directory=test/migrations/sequential --ordering=sequential', (err, stdout, stderr) => {
-        let db = client();
+        let db = client(args);
 
         db('users').select('*').then(rows => {
           if(rows.length) throw new Error('Users Table was not dropped - down migration unsuccessful');
