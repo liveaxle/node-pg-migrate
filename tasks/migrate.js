@@ -56,7 +56,8 @@ module.exports = async function(args={}, client, task) {
 
   // Build migrations path
   let dir = path.join(process.cwd(), value.directory);
-
+  console.log(value, process.cwd(), dir);
+  
   // Check if dir exists - if not make it
   let exists = fs.existsSync(dir);
 

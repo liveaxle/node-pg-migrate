@@ -28,7 +28,7 @@ module.exports = {
  * Get client
  * @param {*} args 
  */
-function getDbClient(args) {
+function getDbClient(args={}) {
   return knex({
     client: 'pg',
     connection: args.connection || {
