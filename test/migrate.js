@@ -77,7 +77,8 @@ describe('Migrate', () => {
     it('Should run up created migrations - sequential' , (done) => {
       exec('node ./ up --directory=test/migrations/sequential --ordering=sequential', (err, stdout, stderr) => {
         let db = client(args);
-        console.log(err.message);
+        console.log(err);
+        console.log(stdout);
         console.log(stderr);
         
         db.schema.raw(`SELECT * FROM pg_catalog.pg_tables;`).then(res => {console.log(res)});
