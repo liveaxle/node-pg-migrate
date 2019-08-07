@@ -106,7 +106,7 @@ function createSchemaAndDataMigrations(dir, config={}) {
   config.types.forEach(type => {
     let loc = path.join(dir, type);
     let content = templates[config.mode](config.name, type);
-    let {name, renames} = migrationNameMappings[config.ordering](config.name.replace(/\s/gi, '-'), loc, config.before);
+    let {name, renames} = migrationNameMappings[config.ordering](config.name.replace(/\s/gi, '-'), loc, type, config.before);
     migrationFileMappings[config.ordering](name, loc, content, renames);
   });
 }
@@ -116,7 +116,7 @@ function createSchemaAndDataMigrations(dir, config={}) {
  * @param  {[type]} name [description]
  * @return {[type]}      <number>.<name>.migration.js
  */
-function generateSequentialName(name, dir, before) {
+function generateSequentialName(name, dir, type, before) {
   // Get array of all files in migration dir
   let files = fs.readdirSync(dir);
   let sequence = files.length && files.map((file='') => parseInt(file.split('.')[0] || 0)).sort((a, b) => a-b) || [0];
@@ -137,7 +137,7 @@ function generateSequentialName(name, dir, before) {
   // Add leading 0 for file system sorting
   if(next.length === 1) next = '0' + next;
 
-  return {name: `${next}.${name}.migration.js`, renames: renameList};
+  return {name: `${next}.${name}.${type}.migration.js`, renames: renameList};
 }
 
 /**

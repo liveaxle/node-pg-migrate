@@ -86,7 +86,7 @@ const mappings = {
   
   try {
     console.log(`${LOG_PREFIX} - starting.`);
-    await (mappings[task] || mappings.unknown)(OPTIONS, task, modes, source, target);
+    await (mappings[task] || mappings.unknown)(OPTIONS, task, source, target);
     console.log(`${LOG_PREFIX} - finished.`);
     process.exit(0);
   } catch(e) {
