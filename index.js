@@ -21,12 +21,6 @@ global.LOG_PREFIX = chalk.white.underline(`Node DB Migrate:`) + ' ' + chalk.mage
 global.resolve = (name) => require(path.join(__dirname, name));
 
 /**
- * Support modes, default is standard
- */
-const modes = ['standard', 'high-availability'];
-
-const defaults = {}
-/**
  * Load RC
  * @type {[type]}
  */
