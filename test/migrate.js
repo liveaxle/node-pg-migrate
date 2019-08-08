@@ -33,7 +33,7 @@ function reset(cb) {
 function close() {
   setTimeout(() => {
     process.exit(0);
-  }, 500)
+  }, 1500)
 }
   
   
@@ -163,8 +163,19 @@ describe('Migrate', () => {
         assert.lengthOf(data, 1, 'Data File was not created.');
         assert.isNumber(parseInt(schema[0].split('.')[0]));
         assert.isNumber(parseInt(data[0].split('.')[0]));
-        reset(done);
-        close();
+        done();
+      });
+    });
+
+    it('Should reset the migrations table', (done) => {
+      exec('node ./ reset', (err, stdout, stderr) => {
+        assert.isNull(err);
+
+        exec('node ./ list', (err, stdout, stderr) => {
+          assert.isNotNull(err, 'Did not delete migration table.');
+          reset(done);
+          close();
+        });  
       });
     })
   });
