@@ -121,6 +121,11 @@ These arguments can be passed as `--<arg name>` to *all* cli methods.
 |include | any specific migrations to run, if empty will run all. Use one --flag per migration  | no  | []  |
 |exclude | any specific migrations to ignore, if empty will run all.  Use one --flag per migration | no  | []  |
 
+#### Up for Multiple Types
+We recommend using an .npgmrc file so your configuration can be consistent across method calls. If you have created your migrations with both `schema` and `data` types, when you run `up` it will execute your migration types in the order they were provided, ie: `["schema", "data"]` or `--types=schema --types=data`, will both run schema migrations first.
+
+This is technically because, the migrate create config can support `n` number of types should you choose. *It's actually not coupled to the words `schema` or `data`.*
+
 ### Run DOWN migrations
 
 * `npm run npgm down`
@@ -131,6 +136,7 @@ These arguments can be passed as `--<arg name>` to *all* cli methods.
 |include | any specific migrations to run, if empty will run all. Use one --flag per migration  | no  | []  |
 |exclude | any specific migrations to ignore, if empty will run all.  Use one --flag per migration | no  | []  |
 
+#### See `up` instructions for multiple types.
 
 ### Reset migrations
 

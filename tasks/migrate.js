@@ -59,7 +59,7 @@ module.exports = async function(args={}, task, source, target) {
   
   // Set Migrations DB
   let npgmdb = target || source;
-  console.log('npgmdb', npgmdb)
+  
   // Check if dir exists - if not make it
   let exists = fs.existsSync(dir);
 
@@ -80,11 +80,11 @@ module.exports = async function(args={}, task, source, target) {
   dirs = !dirs.length? [''] : dirs
 
   // Run through the migration dirs and execute on their contents.
-  for(let i=0; i<dirs.length; i++) {
-    let files = fs.readdirSync(path.join(dir, dirs[i]));
+  await order[mappings[task]](dirs.length, async dirIndex => {
+    let files = fs.readdirSync(path.join(dir, dirs[dirIndex]));
+    
     // Run migrations sequentially
     await order[mappings[task]](files.length, async index => {
-      
       let file = files[index];
       let name = file.split('.')[1];
 
@@ -95,7 +95,7 @@ module.exports = async function(args={}, task, source, target) {
       if(value.exclude.length && value.exclude.indexOf(name) !== -1) return;
 
       // Require each file
-      let fn = require(path.join(dir, dirs[i], file));
+      let fn = require(path.join(dir, dirs[dirIndex], file));
 
       try {
         // Output Status
@@ -121,7 +121,7 @@ module.exports = async function(args={}, task, source, target) {
         throw new Error(`'${mappings[task]}' migration for: [${file}] - ${chalk.red('failed')}: ${e.message}`);
       }
     });
-  }
+  });
 }
 
 /**
