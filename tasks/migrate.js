@@ -59,7 +59,7 @@ module.exports = async function(args={}, task, source, target) {
   
   // Set Migrations DB
   let npgmdb = target || source;
-  
+  console.log('npgmdb', npgmdb)
   // Check if dir exists - if not make it
   let exists = fs.existsSync(dir);
 
@@ -77,7 +77,7 @@ module.exports = async function(args={}, task, source, target) {
   let dirs = value.types.filter(t => fs.existsSync(path.join(dir, t)));
   // Basically, if no types or only ['schema'] is set, then the root dir is the one
   // that has the migrations.
-  dirs = !dirs.length? [dir] : dirs
+  dirs = !dirs.length? [''] : dirs
 
   // Run through the migration dirs and execute on their contents.
   for(let i=0; i<dirs.length; i++) {

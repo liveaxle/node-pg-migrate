@@ -80,10 +80,10 @@ function createSchemaOnlyMigrations(dir, config={}) {
     fs.mkdirSync(dir);
   }
 
-  let {name, renames} = migrationNameMappings[config.ordering](config.name.replace(/\s/gi, '-'), dir, config.before);
+  let {name, renames} = migrationNameMappings[config.ordering](config.name.replace(/\s/gi, '-'), dir, 'schema', config.before);
   let content = templates[config.mode](config.name, 'schema');
 
-  migrationFileMappings[value.ordering](name, dir, content, renames);
+  migrationFileMappings[config.ordering](name, dir, content, renames);
 }
 
 /**

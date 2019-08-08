@@ -82,11 +82,11 @@ const mappings = {
 (async function() {
 
   // build db arguments so you can build the right clients
-  let {source, target} = db.client[OPTIONS.mode](args);
+  let client = db.client[OPTIONS.mode](args);
   
   try {
     console.log(`${LOG_PREFIX} - starting.`);
-    await (mappings[task] || mappings.unknown)(OPTIONS, task, source, target);
+    await (mappings[task] || mappings.unknown)(OPTIONS, task, (client.source || client), (client.target || client));
     console.log(`${LOG_PREFIX} - finished.`);
     process.exit(0);
   } catch(e) {
