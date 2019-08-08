@@ -64,7 +64,7 @@ module.exports = async function(args={}) {
   }
 
   // Proceed to create migrations based on types.
-  createStrategies[value.types.length](path.join(process.cwd(), value.directory), value);
+  createStrategies[(value.types.length > 1 ? 2 : 1)](path.join(process.cwd(), value.directory), value);
 }
 
 /**
@@ -80,7 +80,7 @@ function createSchemaOnlyMigrations(dir, config={}) {
     fs.mkdirSync(dir);
   }
 
-  let {name, renames} = migrationNameMappings[config.ordering](config.name.replace(/\s/gi, '-'), dir, 'schema', config.before);
+  let {name, renames} = migrationNameMappings[config.ordering](config.name.replace(/\s/gi, '-'), dir, config.types[0], config.before);
   let content = templates[config.mode](config.name, 'schema');
 
   migrationFileMappings[config.ordering](name, dir, content, renames);
