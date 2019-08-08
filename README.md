@@ -26,6 +26,10 @@ I (@ktstowell) personally dislike the fragmentation of javascript libraries, how
   * At the time i was looking for a migration library, I needed something that would let me choose how to handle exceptions in my migrations. It seemed that even if I attempted to catch/swallow them the runner would still abort the process.
 * Exclusions
   * I needed the ability in some circumstances to exclude some migrations from running. The use case was, locally, using docker, I didn't need to run certain low-level setup migrations as docker does that for you if you provide the right environment variables. I'm also very adverse to having anything like `if env==='local'` in my code. That should be the responsibility of whatever is orchestrating the migrations. Now in my npm scripts I have `npm run migrate` and `npm run migrate:local` so the code itself remains environment agnostic.
+* Schema vs Data
+  * In many situations the need to decouple migration a schema change versus data is important. I wanted to be able to represent that structurally. With our `types` api you can specificy what kinds of migrations you want and it will create sub folders for them.
+* High Availability.
+  * Many systems implement a migration process that involves provisioning a new database on the fly, running migrations on the new target and then importing existing data from the source. I wanted to represent this as well with our `mode:'high-availability'` option. This will inject a `target` and `source` connection into your migration files.
 
 ## Installation
 
@@ -101,15 +105,12 @@ These arguments can be passed as `--<arg name>` to *all* cli methods.
 |---|---|---|---|
 |ordering | sequential,timestamp  | no  | sequential  |
 |directory | path to your migrations dir  | yes, can be in .rc  | 'migrations'  |
+|types | schema, data | no | schema |
+|mode | standard, high-availability | no | 'standard' |
 
-### Create a migration before another existing migration
+#### Create a migration before another existing migration
 
 * `npm run npgm create -- --name <name> --before <othername>`
-
-| Name  | values  | required  | default  |
-|---|---|---|---|
-|ordering | sequential  | no  | sequential  |
-|directory | path to your migrations dir  | yes, can be in .rc  | 'migrations'  |
 
 ### Run UP migrations
 
@@ -117,9 +118,13 @@ These arguments can be passed as `--<arg name>` to *all* cli methods.
 
 | Name  | values  | required  | default  |
 |---|---|---|---|
-|directory | path to your migrations dir  | yes, can be in .rc  | 'migrations'  |
 |include | any specific migrations to run, if empty will run all. Use one --flag per migration  | no  | []  |
 |exclude | any specific migrations to ignore, if empty will run all.  Use one --flag per migration | no  | []  |
+
+#### Up for Multiple Types
+We recommend using an .npgmrc file so your configuration can be consistent across method calls. If you have created your migrations with both `schema` and `data` types, when you run `up` it will execute your migration types in the order they were provided, ie: `["schema", "data"]` or `--types=schema --types=data`, will both run schema migrations first.
+
+This is technically because, the migrate create config can support `n` number of types should you choose. *It's actually not coupled to the words `schema` or `data`.*
 
 ### Run DOWN migrations
 
@@ -131,6 +136,8 @@ These arguments can be passed as `--<arg name>` to *all* cli methods.
 |include | any specific migrations to run, if empty will run all. Use one --flag per migration  | no  | []  |
 |exclude | any specific migrations to ignore, if empty will run all.  Use one --flag per migration | no  | []  |
 
+#### See `up` instructions for multiple types.
+If you have set multiple types in your configuration, `down` migrations will run them in reverse order as well as the migrations.
 
 ### Reset migrations
 
@@ -139,7 +146,7 @@ These arguments can be passed as `--<arg name>` to *all* cli methods.
 Will simply drop the migrations table from your database. DOES NOT run `down` migrations. This is typicall most useful in a development setting.
 
 
-## Example
+## Example - Standard
 
 In your repository where migrations will be stored:
 
@@ -190,4 +197,59 @@ async function down(client) {
 In each of the above functions you now can write whatever the "foo" migration means to your application. Down migrations should be the opposite, in action and order, from what your up migrations are.
 
 Then, at some later point when you actually need to execute your migrations, you can run `npm run npgm up` and it will execute the sql in the `up` closure above in sequence.
+
+## Example - High Availability
+
+`npgm create foo --mode=high-availability`
+
+```
+'use strict';
+
+/***********************************************************************************************************************************************
+ * NODE DB MIGRATE - FOO
+ ***********************************************************************************************************************************************
+ * @author File generated by @liveaxle/node-pg-migrate
+ * @description
+ * 
+ */
+
+/**
+ * [exports description]
+ * @type {Object}
+ */
+module.exports = {
+  up, down
+};
+
+/**
+ * [up description]
+ * @return {[type]} [description]
+ */
+async function up(target, source) {
+  
+}
+
+/**
+ * [down description]
+ * @return {[type]} [description]
+ */
+async function down(target, source) {
+
+}
+```
+The intent of this `mode` is to inject your two db clients into to your migration closure to enable you to export data from the target and apply it to the source.
+
+## Example - Schema and Data
+
+`npgm create foo --types=data --types=schema`
+
+This will create a migration folder structure like:
+
+```
+/migrations
+  /data
+    <ordering>.foo.migration.js
+  /schema
+    <ordering>.foo.migration.js
+```
 

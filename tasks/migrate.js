@@ -45,7 +45,7 @@ const order = {
 /**
  * Up
  */
-module.exports = async function(args={}, client, task) {
+module.exports = async function(args={}, task, source, target) {
   let model = Object.assign({}, {name: args.name || args._[1]}, args);
   let {error, value} = joi.validate(model, schema);
   // grab files in each directory
@@ -53,64 +53,74 @@ module.exports = async function(args={}, client, task) {
   //  run sync for loop
   // call all up functions - log each progress
   // after each one, save to migrations table
-
+  
   // Build migrations path
   let dir = path.join(process.cwd(), value.directory);
-  console.log(value, process.cwd(), dir);
+  
+  // Set Migrations DB
+  let npgmdb = target || source;
   
   // Check if dir exists - if not make it
   let exists = fs.existsSync(dir);
 
   if(!exists) {
-    throw new Error('No migrations detected. Run migration:create.');
+    throw new Error('No migrations detected. Run migration:create <name>');
   };
 
-  // Get all migrations in folder.
-  let files = fs.readdirSync(dir);
-
   // Does DB exist
-  let table = await db.migrations.exists(client);
+  let table = await db.migrations.exists(npgmdb);
   
   // create if not
-  if(!table) await db.migrations.create(client);
+  if(!table) await db.migrations.create(npgmdb);
 
-  // Run migrations sequentially
-  await order[mappings[task]](files.length, async index => {
-    let file = files[index];
-    let name = file.split('.')[1];
+  // Get migration dirs
+  let dirs = value.types.filter(t => fs.existsSync(path.join(dir, t)));
+  // Basically, if no types or only ['schema'] is set, then the root dir is the one
+  // that has the migrations.
+  dirs = !dirs.length? [''] : dirs
 
-    // If includes were specified and name wasn't found, skip.
-    if(value.include.length && value.include.indexOf(name) === -1) return;
+  // Run through the migration dirs and execute on their contents.
+  await order[mappings[task]](dirs.length, async dirIndex => {
+    let files = fs.readdirSync(path.join(dir, dirs[dirIndex]));
+    
+    // Run migrations sequentially
+    await order[mappings[task]](files.length, async index => {
+      let file = files[index];
+      let name = file.split('.')[1];
 
-    // If exludes has length and name is found, skip;
-    if(value.exclude.length && value.exclude.indexOf(name) !== -1) return;
+      // If includes were specified and name wasn't found, skip.
+      if(value.include.length && value.include.indexOf(name) === -1) return;
 
-    // Require each file
-    let fn = require(path.join(dir, file));
+      // If exludes has length and name is found, skip;
+      if(value.exclude.length && value.exclude.indexOf(name) !== -1) return;
 
-    try {
-      // Output Status
-      console.log(`${LOG_PREFIX} - running '${mappings[task]}' migration for: [${chalk.cyan(file)}]`);
+      // Require each file
+      let fn = require(path.join(dir, dirs[dirIndex], file));
 
-      // Check if migration has been run
-      let state = (await db.migrations.status(file, client));
-      // If state is same as current task, migration has been performed, skip.
-      if(state === mappings[task]) {
+      try {
         // Output Status
-        console.log(`${LOG_PREFIX} - '${mappings[task]}' migration for: [${chalk.cyan(file)}] exists - ${chalk.yellow('skipping')}.`);
-        return;
+        console.log(`${LOG_PREFIX} - running '${mappings[task]}' migration for: [${chalk.cyan(file)}]`);
+
+        // Check if migration has been run
+        let state = (await db.migrations.status(file, npgmdb));
+        // If state is same as current task, migration has been performed, skip.
+        if(state === mappings[task]) {
+          // Output Status
+          console.log(`${LOG_PREFIX} - '${mappings[task]}' migration for: [${chalk.cyan(file)}] exists - ${chalk.yellow('skipping')}.`);
+          return;
+        }
+
+        // Run Migration
+        (await fn[mappings[task]](source, target));
+        // Output Status
+        console.log(`${LOG_PREFIX} - '${mappings[task]}' migration for: [${chalk.cyan(file)}] - ${chalk.green('successful')} \n`);
+
+        // Save migration run to migrations table
+        return await db.migrations.save(file, mappings[task], npgmdb);
+      } catch(e) {
+        throw new Error(`'${mappings[task]}' migration for: [${file}] - ${chalk.red('failed')}: ${e.message}`);
       }
-
-      // Run Migration
-      let result = (await fn[mappings[task]](client));
-      // Output Status
-      console.log(`${LOG_PREFIX} - '${mappings[task]}' migration for: [${chalk.cyan(file)}] - ${chalk.green('successful')} \n`);
-
-      // Save migration run to migrations table
-      return await db.migrations.save(file, mappings[task], client);
-    } catch(e) {
-      throw new Error(`'${mappings[task]}' migration for: [${file}] - ${chalk.red('failed')}: ${e.message}`);
-    }
+    });
   });
 }
 

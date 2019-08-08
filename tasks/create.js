@@ -10,7 +10,10 @@ const joi = require('joi');
 const path = require('path');
 const fs = require('fs');
 const chalk = require('chalk');
-const template = resolve(path.join('templates', 'migration.js'));
+const templates = {
+  'standard': global.resolve(path.join('templates', 'standard.js')),
+  'high-availability': global.resolve(path.join('templates', 'high-availability'))
+};
 
 /**
  * [schema description]
@@ -22,6 +25,11 @@ const schema = joi.object().keys({
   name: joi.string().required(),
   before: joi.string().allow(null, '')
 }).unknown();
+
+const createStrategies = {
+  1: createSchemaOnlyMigrations,
+  2: createSchemaAndDataMigrations
+};
 
 /**
  * [migrationNameMappings description]
@@ -55,20 +63,52 @@ module.exports = async function(args={}) {
     throw new Error(error.message);
   }
 
-  // Build migrations path
-  let dir = path.join(process.cwd(), value.directory);
+  // Proceed to create migrations based on types.
+  createStrategies[(value.types.length > 1 ? 2 : 1)](path.join(process.cwd(), value.directory), value);
+}
+
+/**
+ * 
+ * @param {*} config 
+ */
+function createSchemaOnlyMigrations(dir, config={}) {
 
   // Check if dir exists - if not make it
   let exists = fs.existsSync(dir);
 
   if(!exists) {
     fs.mkdirSync(dir);
-  };
+  }
 
-  let {name, renames} = migrationNameMappings[value.ordering](value.name.replace(/\s/gi, '-'), dir, value.before);
-  let content = template(value.name);
+  let {name, renames} = migrationNameMappings[config.ordering](config.name.replace(/\s/gi, '-'), dir, config.types[0], config.before);
+  let content = templates[config.mode](config.name, 'schema');
 
-  migrationFileMappings[value.ordering](name, dir, content, renames);
+  migrationFileMappings[config.ordering](name, dir, content, renames);
+}
+
+/**
+ * 
+ * @param {*} config 
+ */
+function createSchemaAndDataMigrations(dir, config={}) {
+  // Check if dir exists - if not make it
+  let exists = fs.existsSync(dir);
+
+  if(!exists) {
+    fs.mkdirSync(dir);
+    // Create sub directories
+    config.types.forEach(t => fs.mkdirSync(path.join(dir, t)));
+  } else {
+    // Root directory exists, now make sure the two sub directories exist.
+    config.types.filter(t => !fs.existsSync(path.join(dir, t))).forEach(t => fs.mkdirSync(path.join(dir, t)));
+  }
+
+  config.types.forEach(type => {
+    let loc = path.join(dir, type);
+    let content = templates[config.mode](config.name, type);
+    let {name, renames} = migrationNameMappings[config.ordering](config.name.replace(/\s/gi, '-'), loc, type, config.before);
+    migrationFileMappings[config.ordering](name, loc, content, renames);
+  });
 }
 
 /**
@@ -76,24 +116,28 @@ module.exports = async function(args={}) {
  * @param  {[type]} name [description]
  * @return {[type]}      <number>.<name>.migration.js
  */
-function generateSequentialName(name, dir, before) {
+function generateSequentialName(name, dir, type, before) {
   // Get array of all files in migration dir
   let files = fs.readdirSync(dir);
   let sequence = files.length && files.map((file='') => parseInt(file.split('.')[0] || 0)).sort((a, b) => a-b) || [0];
-  let beforeNext = -1;
+  let names = files.length && (files.map(file => file.split('.')[1])) || [];
   let renameList = [];
-  // If we are inserting an entry determine the correct index
+  let beforeNext = -1;
+  
   if (before) {
-    beforeNext = (files.findIndex(file => file.includes(before)));
+    beforeNext = names.indexOf(before);
     let sliceIndex = beforeNext;
     renameList = files.slice(sliceIndex);
   }
-  let next = before ? beforeNext: (sequence.reverse()[0] += 1) + '';
+
+  // Determine the number of the new file. Need to convert to string at very end
+  // so the length check works.
+  let next = (before ? sequence[beforeNext] : (sequence.reverse()[0] += 1) + '') + '';
 
   // Add leading 0 for file system sorting
   if(next.length === 1) next = '0' + next;
 
-  return {name: `${next}.${name}.migration.js`, renames: renameList};
+  return {name: `${next}.${name}.${type}.migration.js`, renames: renameList};
 }
 
 /**

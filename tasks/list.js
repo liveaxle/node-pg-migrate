@@ -12,7 +12,7 @@ const Table = require('cli-table-redemption');
 /**
  * 
  */
-module.exports = async function(args, client) {
+module.exports = async function(args, task, client) {
   let rows = (await db.migrations.list(client));
 
   let table = new Table({

@@ -24,9 +24,16 @@ global.resolve = (name) => require(path.join(__dirname, name));
  * Load RC
  * @type {[type]}
  */
-const CNFG = require('rc')('npgm', {
-  ordering: 'sequential',
-  directory: 'migrations'
+const RCCONFIG = require('rc')('npgm');
+
+/**
+ * Apply default options, override RC if cli args provided.
+ */
+const OPTIONS = Object.assign({}, RCCONFIG, {
+  ordering: args.ordering || RCCONFIG.ordering || 'sequential',
+  directory: args.directory || RCCONFIG.directory || 'migrations',
+  mode: args.mode || RCCONFIG.mode || 'standard',
+  types: args.types && (args.types.constructor !== Array && [args.types]) || RCCONFIG.types || ['schema']
 });
 
 /**
@@ -68,15 +75,16 @@ const mappings = {
  */
 (async function() {
 
-  let client = db.client(args);
+  // build db arguments so you can build the right clients
+  let client = db.client[OPTIONS.mode](args);
   
   try {
-    console.log(`${LOG_PREFIX} - starting.`)
-    await (mappings[task] || mappings.unknown)(Object.assign({}, CNFG, args), client, task);
-    console.log(`${LOG_PREFIX} - finished.`)
+    console.log(`${LOG_PREFIX} - starting.`);
+    await (mappings[task] || mappings.unknown)(OPTIONS, task, (client.source || client), (client.target || client));
+    console.log(`${LOG_PREFIX} - finished.`);
     process.exit(0);
   } catch(e) {
-    console.log(`${LOG_PREFIX} - ${chalk.red(`Error - ${e.message}`)}`)
+    console.log(`${LOG_PREFIX} - ${chalk.red(`Error - ${e.message}`)}`);
     process.exit(1);
   }
 })();
