@@ -130,7 +130,7 @@ function generateSequentialName(name, dir, type, before) {
     renameList = files.slice(sliceIndex);
   }
 
-  // Determine the number of the new file. Need to convert to stirng at very end
+  // Determine the number of the new file. Need to convert to string at very end
   // so the length check works.
   let next = (before ? sequence[beforeNext] : (sequence.reverse()[0] += 1) + '') + '';
 
