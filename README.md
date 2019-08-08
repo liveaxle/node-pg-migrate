@@ -137,6 +137,7 @@ This is technically because, the migrate create config can support `n` number of
 |exclude | any specific migrations to ignore, if empty will run all.  Use one --flag per migration | no  | []  |
 
 #### See `up` instructions for multiple types.
+If you have set multiple types in your configuration, `down` migrations will run them in reverse order as well as the migrations.
 
 ### Reset migrations
 
