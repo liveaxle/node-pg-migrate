@@ -42,7 +42,7 @@
     "chai": "^4.2.0",
     "codecov": "^3.5.0",
     "istanbul": "^0.4.5",
-    "mocha": "^6.1.4",
+    "mocha": "^7.2.0",
     "mocha-junit-reporter": "^1.23.0",
     "nyc": "^14.1.1"
   }
